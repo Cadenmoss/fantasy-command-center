@@ -1,0 +1,12 @@
+import { loadConfig } from "../lib/config.ts";
+import { fetchLeague } from "../lib/espn/client.ts";
+import { buildContext } from "../lib/projections/blend.ts";
+const cfg = loadConfig();
+const auth = { swid: cfg.swid, espnS2: cfg.espnS2 };
+const lc = cfg.leagues.find((l) => l.name === "Multiple Mossy's")!;
+const league = await fetchLeague(auth, cfg.season, lc.id, lc.teamId);
+const ctx = await buildContext(league);
+for (const [t, g] of ctx.schedule.games) console.log(t, g.kickoff, g.started);
+console.log("bye", [...ctx.schedule.onBye]);
+const me = league.teams.find((t) => t.id === lc.teamId)!;
+for (const p of me.roster) console.log(p.name, p.team, "byeWeek", p.byeWeek, "slot", p.lineupSlotId);

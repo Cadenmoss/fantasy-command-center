@@ -1,0 +1,16 @@
+import { loadConfig } from "../lib/config.ts";
+import { fetchLeague, fetchFreeAgents } from "../lib/espn/client.ts";
+import { submitClaim } from "../lib/engine/transact.ts";
+const [leagueName, addName, dropName, mode] = process.argv.slice(2);
+const cfg = loadConfig();
+const auth = { swid: cfg.swid, espnS2: cfg.espnS2 };
+const lc = cfg.leagues.find((l) => l.name === leagueName)!;
+const league = await fetchLeague(auth, cfg.season, lc.id, lc.teamId);
+const me = league.teams.find((t) => t.id === lc.teamId)!;
+const pool = await fetchFreeAgents(auth, cfg.season, lc.id, league.week, 400);
+const add = pool.find((p) => p.name === addName);
+const drop = me.roster.find((p) => p.name === dropName);
+console.log("add:", add && `${add.name} ${add.acquisitionStatus} ${add.injuryStatus}`, "| drop:", drop && `${drop.name} slot ${drop.lineupSlotId}`);
+if (!add || !drop) process.exit(1);
+const out = await submitClaim({ leagueId: lc.id, addPlayerId: add.id, dropPlayerId: drop.id, dryRun: mode !== "live", overrideProtection: mode === "live" && dropName === "Travis Kelce" });
+console.log(JSON.stringify(out, null, 1));

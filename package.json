@@ -1,0 +1,40 @@
+{
+  "name": "fantasy-command-center",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 3001",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "verify": "node --env-file-if-exists=.env.local scripts/verify.ts",
+    "report": "node --env-file-if-exists=.env.local scripts/report.ts",
+    "lineup": "node --env-file-if-exists=.env.local scripts/lineup.ts",
+    "lineup:dry": "node --env-file-if-exists=.env.local scripts/lineup.ts --dry-run",
+    "selftest": "node scripts/selftest.ts",
+    "scorecard": "node --env-file-if-exists=.env.local scripts/scorecard.ts",
+    "edge": "node --env-file-if-exists=.env.local scripts/edge.ts",
+    "learn": "node --env-file-if-exists=.env.local scripts/learn.ts",
+    "doctor": "node --env-file-if-exists=.env.local scripts/doctor.ts",
+    "whatif:snapshot": "node --env-file-if-exists=.env.local scripts/whatif/snapshot.ts",
+    "whatif:price": "node scripts/whatif/price.ts",
+    "whatif:search": "node scripts/whatif/search.ts",
+    "dashboard:restart": "launchctl kickstart -k gui/$(id -u)/com.fantasy.commandcenter.dashboard"
+  },
+  "dependencies": {
+    "next": "16.3.5",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.3.5",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
+}
